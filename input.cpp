@@ -251,7 +251,7 @@ char K_INPUT::readdevices()
    {
       dijoyst->Poll();
       DIJOYSTATE js;
-      readdevice(&js, sizeof js, (LPDIRECTINPUTDEVICE)dijoyst);
+      readdevice(&js, sizeof js, (LPDIRECTINPUTDEVICE8)dijoyst);
       if ((signed short)js.lX < 0) kbdpc[VK_JLEFT] = 0x80;
       if ((signed short)js.lX > 0) kbdpc[VK_JRIGHT] = 0x80;
       if ((signed short)js.lY < 0) kbdpc[VK_JUP] = 0x80;
@@ -341,10 +341,10 @@ char K_INPUT::readdevices()
 
    lastkey = process_msgs();
 
-   memset(kbdpc, 0, 256); // Мышь и джойстик не очищаем
+   memset(kbdpc, 0, 256); // пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
    ReadKeyboard(kbdpc);
 
-   // Исправление "залипания" CapsLock, CapsLock при однократном нажатии возвращает всегда 0x80, пока не будет нажат повторно
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" CapsLock, CapsLock пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 0x80, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
    u8 cl = kbdpc[DIK_CAPSLOCK];
    kbdpc[DIK_CAPSLOCK] ^= CapsLockState;
    CapsLockState = cl;

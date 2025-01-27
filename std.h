@@ -1,6 +1,6 @@
 #define _WIN32_WINNT        0x0500   // mouse wheel since win2k
 #define _WIN32_IE           0x0500   // for property sheet in win95. without this will not start in 9x
-#define DIRECTINPUT_VERSION 0x05b2   // joystick since dx 5.0 (for NT4, need 3.0)
+#define DIRECTINPUT_VERSION 0x0800
 #define DIRECTSOUND_VERSION 0x0800
 #define DIRECTDRAW_VERSION  0x0500
 #define DIRECT3D_VERSION    0x0900
@@ -69,7 +69,7 @@ using std::max;
 
 #include "mods.h"
 
-#pragma comment(lib, "dinput.lib")
+#pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "ddraw.lib")
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "dxguid.lib")

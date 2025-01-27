@@ -23,7 +23,7 @@ extern LPDIRECTDRAWSURFACE sprim;
 extern LPDIRECTDRAWSURFACE surf0;
 extern LPDIRECTDRAWSURFACE surf1;
 
-extern LPDIRECTINPUTDEVICE2 dijoyst;
+extern LPDIRECTINPUTDEVICE8 dijoyst;
 
 void sound_play();
 void sound_stop();
@@ -45,6 +45,6 @@ void start_dx();
 void done_dx();
 void scale_normal();
 
-void readdevice(VOID *md, DWORD sz, LPDIRECTINPUTDEVICE dev);
+void readdevice(VOID *md, DWORD sz, LPDIRECTINPUTDEVICE8 dev);
 void readmouse(DIMOUSESTATE *md);
 void ReadKeyboard(PVOID KbdData);

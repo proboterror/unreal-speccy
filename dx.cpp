@@ -46,9 +46,9 @@ static LPDIRECTDRAWSURFACE surf2;
 static PVOID SurfMem1 = nullptr;
 static ULONG SurfPitch1 = 0;
 
-static LPDIRECTINPUTDEVICE dikeyboard;
-static LPDIRECTINPUTDEVICE dimouse;
-LPDIRECTINPUTDEVICE2 dijoyst;
+static LPDIRECTINPUTDEVICE8 dikeyboard;
+static LPDIRECTINPUTDEVICE8 dimouse;
+LPDIRECTINPUTDEVICE8 dijoyst;
 
 static LPDIRECTSOUND ds;
 static LPDIRECTSOUNDBUFFER dsbf;
@@ -131,7 +131,7 @@ static void FlipGdi()
 
 static void FlipBltAlign16()
 {
-   // Отрисовка в буфер выравненный на 16 байт (необходимо для запси через sse2)
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 16 пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ sse2)
    renders[conf.render].func(PUCHAR(SurfMem1), SurfPitch1);
 
 restore_lost:;
@@ -210,7 +210,7 @@ restore_lost:;
        exit();
    }
 
-   // Отрисовка в буфер выравненный на 4 байта
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 4 пїЅпїЅпїЅпїЅпїЅ
    renders[conf.render].func(PUCHAR(desc.lpSurface), unsigned(desc.lPitch));
 
    r = surf1->Unlock(nullptr);
@@ -266,7 +266,7 @@ restore_lost:;
    if(!CalcFlipRect(&R))
        return;
 
-   // Очистка back буфера
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ back пїЅпїЅпїЅпїЅпїЅпїЅ
    Fx.dwFillColor = 0;
    r = surf2->Blt(nullptr, nullptr, nullptr, DDBLT_WAIT | DDBLT_ASYNC |  DDBLT_COLORFILL, &Fx);
    if (r != DD_OK)
@@ -282,7 +282,7 @@ restore_lost:;
        exit();
    }
 
-   // Рисование картинки с масштабированием в n раз из surf1 (320x240) -> surf2 (размер экрана)
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ n пїЅпїЅпїЅ пїЅпїЅ surf1 (320x240) -> surf2 (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ)
    r = surf2->Blt(&R, surf1, nullptr, DDBLT_WAIT | DDBLT_ASYNC | DDBLT_DDFX, &Fx);
    if (r != DD_OK)
    {
@@ -298,7 +298,7 @@ restore_lost:;
        exit();
    }
 
-   // Копирование surf2 на surf0 (экран, размер экрана)
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ surf2 пїЅпїЅ surf0 (пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ)
    r = surf0->Blt(nullptr, surf2, nullptr, DDBLT_WAIT | DDBLT_ASYNC | DDBLT_DDFX, &Fx);
    if (r != DD_OK)
    {
@@ -740,8 +740,8 @@ void OnEnterGui()
 //    printf("%s->%p\n", __FUNCTION__, D3dDev);
     sound_stop();
 
-    // Вывод GUI при активном d3d exclusive режиме
-    // на время вывода GUI переход в non exclusive fullscreen
+    // пїЅпїЅпїЅпїЅпїЅ GUI пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ d3d exclusive пїЅпїЅпїЅпїЅпїЅпїЅ
+    // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ GUI пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ non exclusive fullscreen
     if((temp.rflags & RF_D3DE) && D3dDev)
     {
         OldRflags = temp.rflags;
@@ -765,13 +765,13 @@ void OnExitGui(bool RestoreVideo)
         return;
     }
 
-    // Возврат из GUI в d3d exclusive режим
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ GUI пїЅ d3d exclusive пїЅпїЅпїЅпїЅпїЅ
     if((temp.rflags & RF_D3DE))
     {
         SetVideoModeD3d(true);
     }
 
-    // Переключение RF_D3DE->RF_D3D (в меню настроек переключен видеодрайвер)
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ RF_D3DE->RF_D3D (пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
     if((OldRflags & RF_D3DE) && (temp.rflags & RF_D3D))
     {
         SetVideoModeD3d(false);
@@ -1168,11 +1168,11 @@ static LRESULT CALLBACK WndProc(HWND hwnd,UINT uMessage,WPARAM wparam,LPARAM lpa
    }
 
    // WM_NCLBUTTONDOWN -> WM_SYSCOMMAND(SC_MOVE) -|-> WM_CAPTURECHANGED -> WM_GETMINMAXINFO -> WM_ENTERSIZEMOVE
-   // При получении WM_SYSCOMMAND(SC_MOVE) стандартная процедура обработки сообщения запускает модальный цикл
+   // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ WM_SYSCOMMAND(SC_MOVE) пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
    if(uMessage == WM_SYSCOMMAND)
    {
 //       printf("WM_SYSCOMMAND(0x%X), w=%X, l=%X\n", uMessage, wparam, lparam);
-// Кодирование сторон рамки окна для SC_SIZE (код угла получается суммированием кодов смежных сторон)
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ SC_SIZE (пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ)
 //     4           5
 //      \ ___3___ /
 //       |       |
@@ -1355,7 +1355,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd,UINT uMessage,WPARAM wparam,LPARAM lpa
    return DefWindowProc(hwnd, uMessage, wparam, lparam);
 }
 
-void readdevice(VOID *md, DWORD sz, LPDIRECTINPUTDEVICE dev)
+void readdevice(VOID *md, DWORD sz, LPDIRECTINPUTDEVICE8 dev)
 {
    if (!active || !dev)
        return;
@@ -1366,7 +1366,7 @@ void readdevice(VOID *md, DWORD sz, LPDIRECTINPUTDEVICE dev)
       while(r == DIERR_INPUTLOST)
           r = dev->Acquire();
 
-      if(r == DIERR_OTHERAPPHASPRIO) // Приложение находится в background
+      if(r == DIERR_OTHERAPPHASPRIO) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ background
           return;
 
       if (r != DI_OK)
@@ -1416,11 +1416,11 @@ static struct MODEPARAM {
 } modes[MAX_MODES];
 static unsigned max_modes;
 
-// Для инициализации fullscreen режима необходимо выполнение несколтких условий:
-// 1. Размер окна должен совпадать с разрешением экрана, координаты левого верхнего угла должны быть 0, 0
-// 2. Окно должно иметь расширенный стиль WS_EX_TOPMOST
-// При не выполнении хотя бы одного из пунктов при возврате из fullscreen к окнному режиму на vista и выше будет 
-// откючен DWM и окно приобретет "устаревший" вид бордюра
+// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ fullscreen пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ:
+// 1. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ 0, 0
+// 2. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ WS_EX_TOPMOST
+// пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ fullscreen пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ vista пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ 
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ DWM пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 static void SetVideoModeD3d(bool Exclusive)
 {
@@ -1487,7 +1487,7 @@ static void SetVideoModeD3d(bool Exclusive)
         printf("r1={%d,%d,%d,%d} [%dx%d]\n", rr.left, rr.top, rr.right, rr.bottom, rr.right - rr.left, rr.bottom - rr.top);
         printf("SetWindowPos(%p, HWND_TOPMOST, 0, 0, %u, %u)\n", wnd, DispMode.Width, DispMode.Height);
 #endif
-        if(!SetWindowPos(wnd, HWND_TOPMOST, 0, 0, int(DispMode.Width), int(DispMode.Height), 0)) // Установка WS_EX_TOPMOST
+        if(!SetWindowPos(wnd, HWND_TOPMOST, 0, 0, int(DispMode.Width), int(DispMode.Height), 0)) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ WS_EX_TOPMOST
         {
             __debugbreak();
         }
@@ -1638,7 +1638,7 @@ void set_vidmode()
    if (!temp.ofq)
        temp.ofq = conf.refresh;
 
-   // Проверка наличия hw overlay
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ hw overlay
    if(drivers[conf.driver].flags & RF_OVR)
    {
        DDCAPS Caps;
@@ -1789,14 +1789,14 @@ void set_vidmode()
 //      printf("vmode=%ux%u %uHz\n", newx, newy, newfq);
 //      ShowWindow(wnd, SW_SHOWMAXIMIZED);
 //      printf("SetWindowPos(%p, HWND_TOPMOST, 0, 0, %u, %u)\n", wnd, newx, newy);
-      if(!SetWindowPos(wnd, HWND_TOPMOST, 0, 0, int(newx), int(newy), 0)) // Установка WS_EX_TOPMOST
+      if(!SetWindowPos(wnd, HWND_TOPMOST, 0, 0, int(newx), int(newy), 0)) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ WS_EX_TOPMOST
       {
           __debugbreak();
       }
    }
    else
    {
-      // Восстановление предыдущего видеорежима при возврате из fullscreen (если была переустановка видеорежима)
+      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ fullscreen (пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
       if(NeedRestoreDisplayMode)
       {
         if ((r = dd->RestoreDisplayMode()) != DD_OK)
@@ -1891,8 +1891,8 @@ void set_vidmode()
    else if(temp.rflags & (RF_D3D | RF_D3DE)) // d3d windowed, d3d full screen exclusive
    {
 //      printf("%s(RF_D3D)\n", __FUNCTION__);
-      // Сначала нужно отмасштабировать окно до нужного размера, а только потом устанавливать видеорежим
-      // т.к. видеорежим определяет размеры back buffer'а из размеров окна.
+      // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+      // пїЅ.пїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ back buffer'пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.
    }
    else  // blt, direct video mem
    {
@@ -1941,16 +1941,16 @@ void set_vidmode()
          desc.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT;
          desc.dwWidth = temp.ox; desc.dwHeight = temp.oy;
 
-         // Видеокарты AMD Radeon HD не поддерживают surface в системной памяти
-         // из за этого приходится отдельный буфер в системно памяти и делать программное
-         // копирование в surface выделенный в видеопамяти иначе никак не задать выравнивание на 16 байт
+         // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ AMD Radeon HD пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ surface пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+         // пїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+         // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ surface пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 16 пїЅпїЅпїЅпїЅ
          desc.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY | DDSCAPS_LOCALVIDMEM;
 
 #ifdef MOD_SSE2
          if(!(renders[conf.render].flags & RF_1X))
          {
              SurfPitch1 = (temp.ox * temp.obpp) >> 3;
-             SurfPitch1 = (SurfPitch1 + 15) & ~15U; // Выравнивание на 16
+             SurfPitch1 = (SurfPitch1 + 15) & ~15U; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 16
 
              if(SurfMem1)
                  _aligned_free(SurfMem1);
@@ -1998,7 +1998,7 @@ void set_vidmode()
       { printrdd("IDirectDraw2::GetAttachedSurface()", r); exit(); }
    }
 
-   // Настраиваем функцию конвертирования из текущего формата в BGR24
+   // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ BGR24
    switch(temp.obpp)
    {
    case 8: ConvBgr24 = ConvPal8ToBgr24; break;
@@ -2019,13 +2019,13 @@ void set_vidmode()
 
    if(temp.rflags & (RF_D3D | RF_D3DE)) // d3d windowed, d3d full screen exclusive
    {
-       // Сначала нужно отмасштабировать окно до нужного размера, а только потом устанавливать видеорежим
-       // т.к. видеорежим определяет размеры back buffer'а из размеров окна.
+       // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+       // пїЅ.пїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ back buffer'пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ.
        SetVideoModeD3d((temp.rflags & RF_D3DE) != 0);
    }
 }
 
-static HRESULT SetDIDwordProperty(LPDIRECTINPUTDEVICE pdev, REFGUID guidProperty,
+static HRESULT SetDIDwordProperty(LPDIRECTINPUTDEVICE8 pdev, REFGUID guidProperty,
                    DWORD dwObject, DWORD dwHow, DWORD dwValue)
 {
    DIPROPDWORD dipdw;
@@ -2040,24 +2040,13 @@ static HRESULT SetDIDwordProperty(LPDIRECTINPUTDEVICE pdev, REFGUID guidProperty
 static BOOL CALLBACK InitJoystickInput(LPCDIDEVICEINSTANCE pdinst, LPVOID pvRef)
 {
    HRESULT r;
-   LPDIRECTINPUT pdi = (LPDIRECTINPUT)pvRef;
-   LPDIRECTINPUTDEVICE dijoyst1;
-   LPDIRECTINPUTDEVICE2 dijoyst;
-   if ((r = pdi->CreateDevice(pdinst->guidInstance, &dijoyst1, nullptr)) != DI_OK)
+   LPDIRECTINPUT8 pdi = (LPDIRECTINPUT8)pvRef;
+   LPDIRECTINPUTDEVICE8 dijoyst;
+   if ((r = pdi->CreateDevice(pdinst->guidInstance, &dijoyst, nullptr)) != DI_OK)
    {
        printrdi("IDirectInput::CreateDevice() (joystick)", r);
        return DIENUM_CONTINUE;
    }
-
-   r = dijoyst1->QueryInterface(IID_IDirectInputDevice2, (void**)&dijoyst);
-   if (r != S_OK)
-   {
-      printrdi("IDirectInputDevice::QueryInterface(IID_IDirectInputDevice2) [dx5 not found]", r);
-      dijoyst1->Release();
-      dijoyst1=nullptr;
-      return DIENUM_CONTINUE;
-   }
-   dijoyst1->Release();
 
    DIDEVICEINSTANCE dide = { sizeof dide };
    if ((r = dijoyst->GetDeviceInfo(&dide)) != DI_OK)
@@ -2441,10 +2430,10 @@ void start_dx()
       conf.sound.do_sound = do_sound_none;
    }
 
-   LPDIRECTINPUT di;
-   r = DirectInputCreate(hIn,DIRECTINPUT_VERSION,&di,nullptr);
+   LPDIRECTINPUT8 di;
+   r = DirectInput8Create(hIn,DIRECTINPUT_VERSION, IID_IDirectInput8A, (void**) & di, nullptr);
 
-   if ((r != DI_OK) && (r = DirectInputCreate(hIn,0x0300,&di,nullptr)) != DI_OK)
+   if (r != DI_OK)
    {
        printrdi("DirectInputCreate()", r);
        exit();
@@ -2499,9 +2488,9 @@ void start_dx()
        dimouse = nullptr;
    }
 
-   if ((r = di->EnumDevices(DIDEVTYPE_JOYSTICK, InitJoystickInput, di, DIEDFL_ATTACHEDONLY)) != DI_OK)
+   if ((r = di->EnumDevices(DI8DEVCLASS_GAMECTRL, InitJoystickInput, di, DIEDFL_ATTACHEDONLY)) != DI_OK)
    {
-       printrdi("IDirectInput::EnumDevices(DIDEVTYPE_JOYSTICK,...)", r);
+       printrdi("IDirectInput::EnumDevices(DI8DEVCLASS_GAMECTRL,...)", r);
        exit();
    }
 
